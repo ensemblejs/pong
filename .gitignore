@@ -1,0 +1,8 @@
+node_modules
+.DS_Store
+.bundle
+build
+game/js/gen
+vendor
+.sass-cache
+game/css
