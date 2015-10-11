@@ -1,13 +1,15 @@
 {
-  "name": "ensemblejs-start-here",
+  "name": "ensemblejs-demo-pong",
   "version": "1.0.0",
-  "description": "Your game description goes here",
+  "description": "It's Pong!",
   "engines": {
     "node": "latest",
     "npm": "latest"
   },
   "dependencies": {
-    "ensemblejs": "^5.1.0"
+    "distributedlife-sat": "file:///Users/distributedlife/projects/sat-js",
+    "ensemblejs": "file:///Users/distributedlife/projects/ensemblejs",
+    "pixi.js": "^3.0.7"
   },
   "devDependencies": {
     "browserify": "^8.1.1",

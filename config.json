@@ -1,0 +1,28 @@
+{
+  "ensemble": {
+    "maxPlayers": 2
+  },
+  "pong": {
+    "ball": {
+      "position": { "x": 250, "y": 200 },
+      "initialSpeed": 150,
+      "radius": 5,
+      "colour": "0xffffff"
+    },
+    "paddle": {
+      "width": 10,
+      "height": 50,
+      "colour": "0xffffff",
+      "speed": 100,
+      "bounds": {
+        "minimum": 100,
+        "maximum": 450
+      }
+    },
+    "board": {
+      "width": 500,
+      "height": 500,
+      "colour": "0x38ff38"
+    }
+  }
+}
