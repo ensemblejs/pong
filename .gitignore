@@ -6,3 +6,4 @@ game/js/gen
 vendor
 .sass-cache
 game/css
+.DS_Store
