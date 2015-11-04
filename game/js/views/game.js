@@ -7,13 +7,6 @@ module.exports = {
   deps: ['StateTracker', 'Config', 'DefinePlugin', '$'],
   func: function Pong (tracker, config, define, $) {
 
-    function p1Paddle (state) { return state.player['1'].paddle.position; }
-    function p2Paddle (state) { return state.player['2'].paddle.position; }
-    function p1Score (state) { return state.player['1'].score; }
-    function p2Score (state) { return state.player['2'].score; }
-    function round (state) { return state.pong.round; }
-    function ballPosition (state) { return state.pong.ball.position; }
-
     function updatePaddle (current, prior, paddleShape) {
       paddleShape.position.x = current.x;
       paddleShape.position.y = current.y;
@@ -29,7 +22,6 @@ module.exports = {
     }
 
     //Game
-
     function createBoard () {
       var board = new PIXI.Graphics();
       board.beginFill(config().pong.board.colour);
@@ -61,11 +53,6 @@ module.exports = {
           boardDimensions.height < screenDimensions.usableHeight);
     }
 
-    // function boardIsBiggerThenScreen(boardDimensions, screenDimensions) {
-    //   return (boardDimensions.width > screenDimensions.usableWidth ||
-    //       boardDimensions.height > screenDimensions.usableHeight);
-    // }
-
     function calculateOffset (boardDimensions, screenDimensions) {
       if (boardIsSmallerThenScreen(boardDimensions, screenDimensions)) {
         return {
@@ -76,17 +63,6 @@ module.exports = {
         return { x: 0, y: 0 };
       }
     }
-
-    // function calculateScale (boardDimensions, screenDimensions) {
-    //   if (boardIsBiggerThenScreen(boardDimensions, screenDimensions)) {
-    //     return {
-    //       x: screenDimensions.usableWidth / boardDimensions.width,
-    //       y: screenDimensions.usableHeight / boardDimensions.height
-    //     };
-    //   } else {
-    //     return { x: 1, y: 1 };
-    //   }
-    // }
 
     var stage;
     var renderer;
@@ -111,21 +87,9 @@ module.exports = {
       };
     });
 
-    // define()('OnResize', function () {
-    //   return function resizeScene (dims) {
-    //     if (!stage) {
-    //       return;
-    //     }
-
-    //     var scale = calculateScale(config().pong.board, dims);
-    //     stage.scale.x = scale.x;
-    //     stage.scale.y = scale.y;
-
-    //     var offset = calculateOffset(config().pong.board, dims);
-    //     stage.position.x = offset.x;
-    //     stage.position.y = offset.y;
-    //   };
-    // });
+    function removeWaiting () {
+      $()('#waiting-for-players').remove();
+    }
 
     // GAME
     var hud = require('../../views/overlays/hud.jade');
@@ -143,29 +107,16 @@ module.exports = {
       stage.addChild(paddle1);
       stage.addChild(paddle2);
 
-      tracker().onChangeOf(p1Paddle, updatePaddle, paddle1);
-      tracker().onChangeOf(p1Score, updateHud, 'player-1-score');
+      tracker().onChangeOf('player.1.pong.paddle.position', updatePaddle, paddle1);
+      tracker().onChangeOf('player.1.pong.score', updateHud, 'player-1-score');
 
-      tracker().onChangeOf(p2Paddle, updatePaddle, paddle2);
-      tracker().onChangeOf(p2Score, updateHud, 'player-2-score');
+      tracker().onChangeOf('player.2.pong.paddle.position', updatePaddle, paddle2);
+      tracker().onChangeOf('player.2.pong.score', updateHud, 'player-2-score');
 
-      tracker().onChangeOf(ballPosition, updateBall, ball);
-      tracker().onChangeOf(round, updateHud, 'pong-round');
+      tracker().onChangeOf('pong.ball.position', updateBall, ball);
+      tracker().onChangeOf('pong.round', updateHud, 'pong-round');
 
-      // function createWall (x, y, w, h) {
-      //   var wall = new PIXI.Graphics();
-      //   wall.beginFill(0xffffff);
-      //   wall.drawRect(x, y, w, h);
-      //   wall.position.x = x;
-      //   wall.position.y = y;
-
-      //   return wall;
-      // }
-
-      // //collision debug view
-      // var width = config().pong.board.width;
-      // var height = config().pong.board.height;
-      // stage.addChild(createWall(0, -50, width, 50));
+      tracker().onChangeTo('ensemble.waitingForPlayers', false, removeWaiting);
     };
   }
 };

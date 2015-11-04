@@ -30,7 +30,7 @@
     "vinyl-transform": "^1.0.0"
   },
   "scripts": {
-    "start": "gulp && node game.js | bunyan -o short -l info",
+    "start": "gulp && node game.js | bunyan -o short",
     "test": "gulp test"
   },
   "browserify": {

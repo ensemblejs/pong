@@ -30,10 +30,12 @@ module.exports = {
     function movePaddle (playerId, position, distance) {
       var player = {};
       player[playerId] = {
-        paddle: {
-          position: {
-            x: position('x'),
-            y: movePaddleAlongRail(position('y'), distance)
+        pong: {
+          paddle: {
+            position: {
+              x: position('x'),
+              y: movePaddleAlongRail(position('y'), distance)
+            }
           }
         }
       };
@@ -45,14 +47,14 @@ module.exports = {
 
     function up (state, data) {
       var playerId = data.playerId;
-      var position = state.player(playerId).get('paddle')('position');
+      var position = state.player(playerId).get('pong.paddle.position');
 
       return movePaddle(playerId, position, -paddleSpeed * data.delta);
     }
 
     function down (state, data) {
       var playerId = data.playerId;
-      var position = state.player(playerId).get('paddle')('position');
+      var position = state.player(playerId).get('pong.paddle.position');
 
       return movePaddle(playerId, position, paddleSpeed * data.delta);
     }

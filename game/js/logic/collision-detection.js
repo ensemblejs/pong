@@ -39,12 +39,12 @@ module.exports = {
       };
     }
 
-    define()('OnPhysicsFrame', function () {
+    define()('OnPhysicsFrameInGame', function () {
       return function bounceBall (state, delta) {
         var radius = config().pong.ball.radius;
         var board = config().pong.board;
 
-        var ball = unwrapBall(state.for('pong').get('ball'));
+        var ball = unwrapBall(state.get('pong.ball'));
         ball.position.x += (ball.velocity.x * delta);
         ball.position.y += (ball.velocity.y * delta);
 
@@ -52,12 +52,8 @@ module.exports = {
         var p2 = state.player(2);
 
         var players = {
-          1: {
-            score: p1.get('score')
-          },
-          2: {
-            score: p2.get('score')
-          }
+          1: { score: p1.get('pong.score') },
+          2: { score: p2.get('pong.score') }
         };
 
         function playerWins (p) {
@@ -83,8 +79,8 @@ module.exports = {
         }
 
         //bounce off paddles
-        var paddle1 = unwrapPaddle(p1.get('paddle'));
-        var paddle2 = unwrapPaddle(p2.get('paddle'));
+        var paddle1 = unwrapPaddle(p1.get('pong.paddle'));
+        var paddle2 = unwrapPaddle(p2.get('pong.paddle'));
 
         test(paddle1, ball, bounceOfPaddle);
         test(paddle2, ball, bounceOfPaddle);
@@ -98,7 +94,6 @@ module.exports = {
       };
     });
 
-    return function setup () {
-    };
+    return function setup () {};
   }
 };

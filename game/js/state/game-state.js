@@ -23,12 +23,16 @@ module.exports = {
       },
       player: {
         1: {
-          paddle: rectangle({x: 20, y: 225}, paddle.width, paddle.height),
-          score: 0
+          pong: {
+            paddle: rectangle({x: 20, y: 225}, paddle.width, paddle.height),
+            score: 0
+          }
         },
         2: {
-          paddle: rectangle({x: 470, y: 225}, paddle.width, paddle.height),
-          score: 0
+          pong: {
+            paddle: rectangle({x: 470, y: 225}, paddle.width, paddle.height),
+            score: 0
+          }
         }
       }
     };
