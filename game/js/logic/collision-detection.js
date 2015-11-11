@@ -39,7 +39,7 @@ module.exports = {
       };
     }
 
-    define()('OnPhysicsFrameInGame', function () {
+    define()('OnPhysicsFrame', function () {
       return function bounceBall (state, delta) {
         var radius = config().pong.ball.radius;
         var board = config().pong.board;

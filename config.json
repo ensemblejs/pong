@@ -1,5 +1,17 @@
 {
+  "debug": {
+    "develop": true
+  },
+  "logging": {
+    "logLevel": "warn",
+    "expressBunyanLogger": {
+      "excludes": [
+        "*"
+      ]
+    }
+  },
   "ensemble": {
+    "minPlayers": 2,
     "maxPlayers": 2
   },
   "pong": {
