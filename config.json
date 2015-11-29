@@ -1,9 +1,12 @@
 {
+  "game": {
+    "title": "Pong"
+  },
   "debug": {
     "develop": true
   },
   "logging": {
-    "logLevel": "warn",
+    "logLevel": "info",
     "expressBunyanLogger": {
       "excludes": [
         "*"

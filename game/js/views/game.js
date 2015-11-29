@@ -1,6 +1,7 @@
 'use strict';
 
 var PIXI = require('pixi.js');
+var each = require('lodash').each;
 
 module.exports = {
   type: 'OnClientReady',
@@ -91,9 +92,73 @@ module.exports = {
       $()('#waiting-for-players').remove();
     }
 
+    function notStarted () {
+      $()('#game-not-started').show();
+      $()('#countdown').hide();
+      $()('#playing').hide();
+      $()('#game-over').hide();
+    }
+
+    function countdown () {
+      $()('#game-not-started').hide();
+      $()('#countdown').show();
+      $()('#playing').hide();
+      $()('#game-over').hide();
+    }
+
+    function inGame () {
+      $()('#game-not-started').hide();
+      $()('#countdown').hide();
+      $()('#playing').show();
+      $()('#game-over').hide();
+    }
+
+    function gameOver () {
+      $()('#game-not-started').hide();
+      $()('#countdown').hide();
+      $()('#playing').hide();
+      $()('#game-over').show();
+    }
+
+    function playerReady (id) {
+      $()('.player-' + id + '-status .ready').text('Ready');
+    }
+
+    function playerNotReady (id) {
+      $()('.player-' + id + '-status .ready').text('Not Ready');
+    }
+
+    function p1NotReady () { playerNotReady(1); }
+    function p2NotReady () { playerNotReady(2); }
+    function p1Ready () { playerReady(1); }
+    function p2Ready () { playerReady(2); }
+
     // GAME
     var hud = require('../../views/overlays/hud.jade');
     $()('#overlay').append(hud());
+
+    define()('OnPlayerGroupChange', function OnPlayerGroupChange () {
+      function online (player) {
+        $()('.player-' + player.id + '-status .connection').hide();
+        $()('.player-' + player.id + '-status .ready').show();
+      }
+
+      function offline (player) {
+        $()('.player-' + player.id + '-status .connection').show();
+        $()('.player-' + player.id + '-status .ready').hide();
+      }
+
+      var updateDisplay = {
+        online: online,
+        offline: offline
+      };
+
+      return function handle (players) {
+        each(players, function (player) {
+          updateDisplay[player.status](player);
+        });
+      };
+    });
 
     return function setup (dims) {
       setupPixiJs(dims);
@@ -115,6 +180,17 @@ module.exports = {
 
       tracker().onChangeOf('pong.ball.position', updateBall, ball);
       tracker().onChangeOf('pong.round', updateHud, 'pong-round');
+
+      tracker().onChangeTo('pong.status', 'not-started', notStarted);
+      tracker().onChangeTo('pong.status', 'countdown', countdown);
+      tracker().onChangeTo('pong.status', 'in-game', inGame);
+      tracker().onChangeTo('pong.status', 'game-over', gameOver);
+
+      tracker().onChangeTo('player.1.pong.status', 'not-ready', p1NotReady);
+      tracker().onChangeTo('player.1.pong.status', 'ready', p1Ready);
+
+      tracker().onChangeTo('player.2.pong.status', 'not-ready', p2NotReady);
+      tracker().onChangeTo('player.2.pong.status', 'ready', p2Ready);
 
       tracker().onChangeTo('ensemble.waitingForPlayers', false, removeWaiting);
     };

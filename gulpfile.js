@@ -129,5 +129,9 @@ gulp.task('build-styles', function() {
 });
 gulp.task('build', ['build-styles', 'build-code']);
 
+gulp.task('watch', function () {
+  gulp.watch(paths.scss, ['build-styles']);
+});
+
 gulp.task('default', ['test', 'build']);
 gulp.task('quick', ['clean', 'build']);

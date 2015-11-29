@@ -5,8 +5,9 @@ module.exports = {
   deps: ['Pong-PlayerMovement'],
   func: function Pong (movement) {
     return {
-      up: [{target: movement().up}],
-      down: [{target: movement().down}]
+      up: [{call: movement().up}],
+      down: [{call: movement().down}],
+      space: [ {ack: 'player-ready', whenWaiting: true, onRelease: true} ]
     };
   }
 };

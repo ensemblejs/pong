@@ -1,6 +1,23 @@
-p#pong-round 1
-p
-  span#player-1-score 0
-  span :
-  span#player-2-score 0
-p#waiting-for-players Waiting for one more player to join.
+#game-not-started
+  .player-1-status
+    p.connection waiting for player 1 to connect
+    p.ready.start-hidden player 1 is not ready yet.
+  .pong-logo
+    h1 Pong
+  .player-2-status
+    p.connection waiting for player 2 to connect
+    p.ready.start-hidden player 2 is not ready yet.
+  p#waiting-for-players Waiting for one more player to join.
+#countdown.start-hidden
+  p 3
+#playing.start-hidden
+  p
+    span#player-1-score 0
+    span :
+    span#player-2-score 0
+  p#pong-round 1
+#game-over.start-hidden
+  #you-win
+    h1 You Win
+  #you-lose
+    h1 You Lose

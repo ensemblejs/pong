@@ -19,19 +19,22 @@ module.exports = {
     return {
       pong: {
         ball: ball,
-        round: 1
+        round: 1,
+        status: 'not-started'
       },
       player: {
         1: {
           pong: {
             paddle: rectangle({x: 20, y: 225}, paddle.width, paddle.height),
-            score: 0
+            score: 0,
+            status: 'not-ready'
           }
         },
         2: {
           pong: {
             paddle: rectangle({x: 470, y: 225}, paddle.width, paddle.height),
-            score: 0
+            score: 0,
+            status: 'not-ready'
           }
         }
       }

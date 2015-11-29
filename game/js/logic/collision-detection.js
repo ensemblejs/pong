@@ -41,6 +41,10 @@ module.exports = {
 
     define()('OnPhysicsFrame', function () {
       return function bounceBall (state, delta) {
+        if (state.get('pong.status') !== 'in-game') {
+          return;
+        }
+
         var radius = config().pong.ball.radius;
         var board = config().pong.board;
 

@@ -46,6 +46,10 @@ module.exports = {
     }
 
     function up (state, data) {
+      if (state.get('pong.status') !== 'in-game') {
+        return;
+      }
+
       var playerId = data.playerId;
       var position = state.player(playerId).get('pong.paddle.position');
 
@@ -53,6 +57,10 @@ module.exports = {
     }
 
     function down (state, data) {
+      if (state.get('pong.status') !== 'in-game') {
+        return;
+      }
+
       var playerId = data.playerId;
       var position = state.player(playerId).get('pong.paddle.position');
 
