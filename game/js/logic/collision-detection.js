@@ -7,38 +7,6 @@ module.exports = {
   deps: ['Config', 'DefinePlugin'],
   func: function CollisionDetection (config, define) {
 
-    function unwrapBall(ball) {
-      return {
-        position: {
-          x: ball('position')('x'),
-          y: ball('position')('y')
-        },
-        velocity: {
-          x: ball('velocity')('x'),
-          y: ball('velocity')('y')
-        },
-        radius: ball('radius')
-      };
-    }
-
-    function unwrapPaddle (paddle) {
-      return {
-        position: {
-          x: paddle('position')('x'),
-          y: paddle('position')('y')
-        },
-        angle: paddle('angle'),
-        offset: {
-          x: paddle('offset')('x'),
-          y: paddle('offset')('y'),
-        },
-        calcPoints: paddle('calcPoints'),
-        edges: paddle('edges'),
-        normals: paddle('normals'),
-        points: paddle('points')
-      };
-    }
-
     define()('OnPhysicsFrame', function () {
       return function bounceBall (state, delta) {
         if (state.get('pong.status') !== 'in-game') {
@@ -48,7 +16,7 @@ module.exports = {
         var radius = config().pong.ball.radius;
         var board = config().pong.board;
 
-        var ball = unwrapBall(state.get('pong.ball'));
+        var ball = state.unwrap('pong.ball');
         ball.position.x += (ball.velocity.x * delta);
         ball.position.y += (ball.velocity.y * delta);
 
@@ -83,8 +51,8 @@ module.exports = {
         }
 
         //bounce off paddles
-        var paddle1 = unwrapPaddle(p1.get('pong.paddle'));
-        var paddle2 = unwrapPaddle(p2.get('pong.paddle'));
+        var paddle1 = p1.unwrap('pong.paddle');
+        var paddle2 = p2.unwrap('pong.paddle');
 
         test(paddle1, ball, bounceOfPaddle);
         test(paddle2, ball, bounceOfPaddle);

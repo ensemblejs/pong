@@ -40,9 +40,7 @@ module.exports = {
         }
       };
 
-      return {
-        player: player
-      };
+      return ['player', player];
     }
 
     function up (state, data) {

@@ -1,27 +1,24 @@
 'use strict';
 
 var contains = require('lodash').contains;
+var each = require('lodash').each;
 
 function toggleReady (state, ack, players) {
-  return {
-    player: {
-      1: {
-        pong: { status: contains(players, 1) ? 'ready' : 'not-ready' }
-      },
-      2: {
-        pong: { status: contains(players, 2) ? 'ready' : 'not-ready' }
+  var player = {};
+
+  each(players, function (playerNumber) {
+    player[playerNumber] = {
+      pong: {
+        status: contains(players, playerNumber) ? 'ready' : 'not-ready'
       }
-    }
-  };
+    };
+  });
+
+  return ['player', player];
 }
 
 function start () {
-  console.log('start');
-  return {
-    pong: {
-      status: 'in-game'
-    }
-  };
+  return ['pong.status', 'in-game'];
 }
 
 module.exports = {
@@ -31,12 +28,7 @@ module.exports = {
 
     function beginCountdown () {
       delayedJobs().add('key', 3, 'Pong-GameControl', 'start');
-
-      return {
-        pong: {
-          status: 'countdown'
-        }
-      };
+      return ['pong.status', 'countdown'];
     }
 
     return {
