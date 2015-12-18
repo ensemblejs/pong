@@ -1,0 +1,18 @@
+{
+  "ensemble" : {
+    "mode" : "game",
+    "randomSeed" : "953a751b-0642-4510-8295-6df1909702ba"
+  },
+  "player" : {
+    "1" : {
+      "pong" : {
+        "score" : 8
+      }
+    },
+    "2" : {
+      "pong" : {
+        "score" : 8
+      }
+    }
+  }
+}

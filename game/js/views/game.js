@@ -150,7 +150,8 @@ module.exports = {
 
       var updateDisplay = {
         online: online,
-        offline: offline
+        offline: offline,
+        'not-joined': offline
       };
 
       return function handle (players) {
@@ -171,6 +172,41 @@ module.exports = {
       stage.addChild(ball);
       stage.addChild(paddle1);
       stage.addChild(paddle2);
+
+      var viewMap = {
+        'player.1.pong.paddle.position':[
+          { onChange: updatePaddle, data: paddle1 }
+        ],
+        'player.2.pong.paddle.position': [
+          { onChange: updatePaddle, data: paddle2 }
+        ],
+        'pong.ball.position': [
+          { onChange: updateBall, data: ball }
+        ],
+        'player.1.pong.score': [
+          { onChange: updateHud, data: 'player-1-score' }
+        ],
+        'player.2.pong.score': [
+          { onChange: updateHud, data: 'player-2-score' }
+        ],
+        'pong.round': [
+          { onChange: updateHud, data: 'pong-round' }
+        ],
+        'pong.status': [
+          { equals: 'not-started', call: notStarted},
+          { equals: 'countdown', call:countdown},
+          { equals: 'in-game', call: inGame},
+          { equals: 'game-over', call: gameOver}
+        ],
+        'player.1.pong.status': [
+          { equals: 'not-ready', call: p1NotReady },
+          { equals: 'ready', call: p1Ready }
+        ],
+        'player.2.pong.status': [
+          { equals: 'not-ready', call: p2NotReady },
+          { equals: 'ready', call: p2Ready }],
+        'ensemble.waitingForPlayers': [ {equals: false, call: removeWaiting }]
+      };
 
       tracker().onChangeOf('player.1.pong.paddle.position', updatePaddle, paddle1);
       tracker().onChangeOf('player.1.pong.score', updateHud, 'player-1-score');

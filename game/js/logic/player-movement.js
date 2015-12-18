@@ -28,39 +28,30 @@ module.exports = {
     );
 
     function movePaddle (playerId, position, distance) {
-      var player = {};
-      player[playerId] = {
-        pong: {
-          paddle: {
-            position: {
-              x: position('x'),
-              y: movePaddleAlongRail(position('y'), distance)
-            }
-          }
-        }
-      };
-
-      return ['player', player];
+      return ['player.' + playerId + '.pong.paddle.position', {
+        x: position.x,
+        y: movePaddleAlongRail(position.y, distance)
+      }];
     }
 
     function up (state, data) {
-      if (state.get('pong.status') !== 'in-game') {
-        return;
-      }
+      // if (state.get('pong.status') !== 'in-game') {
+      //   return;
+      // }
 
       var playerId = data.playerId;
-      var position = state.player(playerId).get('pong.paddle.position');
+      var position = state.player(playerId).unwrap('pong.paddle.position');
 
       return movePaddle(playerId, position, -paddleSpeed * data.delta);
     }
 
     function down (state, data) {
-      if (state.get('pong.status') !== 'in-game') {
-        return;
-      }
+      // if (state.get('pong.status') !== 'in-game') {
+      //   return;
+      // }
 
       var playerId = data.playerId;
-      var position = state.player(playerId).get('pong.paddle.position');
+      var position = state.player(playerId).unwrap('pong.paddle.position');
 
       return movePaddle(playerId, position, paddleSpeed * data.delta);
     }

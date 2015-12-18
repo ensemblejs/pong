@@ -28,6 +28,7 @@ module.exports = {
 
     function beginCountdown () {
       delayedJobs().add('key', 3, 'Pong-GameControl', 'start');
+
       return ['pong.status', 'countdown'];
     }
 
