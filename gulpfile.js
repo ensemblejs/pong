@@ -13,15 +13,19 @@ var sourcemaps = require('gulp-sourcemaps');
 var transform = require('vinyl-transform');
 var fs = require('fs');
 var getRepoInfo = require('git-repo-info');
+var mergeJson = require('gulp-merge-json-sets');
 
 var paths = {
-  js: ['game/**/*.js', '!game/js/gen/**'],
+  js: ['game/**/*.js'],
   scss: ['game/**/*.scss'],
-  css: ['game/css'],
+  css: ['dist/css'],
   tests: ['tests/**/*.js'],
-  genjs: './game/js/gen',
-  build: ['./game/js/gen', 'build/**'],
-  modes: ['./build/*.js']
+  genjs: './dist/js',
+  gencss: './dist/css',
+  build: ['build/**', 'dist/**'],
+  modes: ['./build/*.js'],
+  localesSrc: ['./game/locales/*.json'],
+  localesDest: './dist/locales'
 };
 
 var onError = function (error) {
@@ -43,9 +47,14 @@ gulp.task('test', ['clean'], function () {
         .pipe(mocha({reporter: 'spec'}));
 });
 
-gulp.task('prep', ['clean'], function (cb) {
-    fs.mkdir('build', cb);
+gulp.task('make-build', ['clean'], function (done) {
+  fs.mkdir('build', done);
 });
+gulp.task('make-dist', ['clean'], function (done) {
+  fs.mkdir('dist', done);
+});
+
+gulp.task('prep', ['make-dist', 'make-build']);
 
 function generateEntrypointFile (mode, done) {
   var filename = ['build/', mode, '.js'].join('');
@@ -99,14 +108,14 @@ gulp.task('copy-multi-entry-points', ['prep'], function (cb) {
 
 gulp.task('generate-entrypoints', ['copy-multi-entry-points', 'copy-single-entry-point']);
 
-gulp.task('build-code', ['generate-entrypoints'], function() {
+gulp.task('build-code', ['prep', 'generate-entrypoints'], function() {
     var browserified = transform(function(filename) {
         var b = browserify(filename);
         return b.bundle();
     });
 
-    fs.mkdir('game/js/gen', function() {
-        fs.writeFileSync('game/js/gen/common.min.js', '');
+    fs.mkdir('dist/js', function() {
+        fs.writeFileSync('dist/js/common.min.js', '');
     });
 
     return gulp.src(paths.modes)
@@ -118,16 +127,23 @@ gulp.task('build-code', ['generate-entrypoints'], function() {
         .pipe(gulp.dest(paths.genjs));
 });
 
-gulp.task('build-styles', function() {
+gulp.task('build-styles', ['prep'], function() {
     return gulp.src(paths.scss)
         .pipe(plumber({errorHandler: onError}))
         .pipe(autoprefixer({ cascade: false }))
         .pipe(sass({ style: 'expanded', sourcemapPath: 'public/css', bundleExec: true }))
         .pipe(rename({suffix: '.min'}))
         .pipe(flatten())
-        .pipe(gulp.dest('game/css'));
+        .pipe(gulp.dest(paths.gencss));
 });
-gulp.task('build', ['build-styles', 'build-code']);
+
+gulp.task('merge-locales', ['prep'], function () {
+  return gulp.src(paths.localesSrc)
+    .pipe(mergeJson(__dirname + '/node_modules/ensemblejs/locales/'))
+    .pipe(gulp.dest(paths.localesDest));
+});
+
+gulp.task('build', ['build-styles', 'build-code', 'merge-locales']);
 
 gulp.task('watch', function () {
   gulp.watch(paths.scss, ['build-styles']);
