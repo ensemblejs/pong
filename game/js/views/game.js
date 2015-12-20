@@ -134,7 +134,7 @@ module.exports = {
     function p2Ready () { playerReady(2); }
 
     // GAME
-    var hud = require('../../views/overlays/hud.jade');
+    var hud = require('../../assets/views/overlays/hud.jade');
     $()('#overlay').append(hud());
 
     define()('OnPlayerGroupChange', function OnPlayerGroupChange () {

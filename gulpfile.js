@@ -14,18 +14,21 @@ var transform = require('vinyl-transform');
 var fs = require('fs');
 var getRepoInfo = require('git-repo-info');
 var mergeJson = require('gulp-merge-json-sets');
+var mkdirp = require('mkdirp');
 
 var paths = {
-  js: ['game/**/*.js'],
-  scss: ['game/**/*.scss'],
-  css: ['dist/css'],
-  tests: ['tests/**/*.js'],
-  genjs: './dist/js',
-  gencss: './dist/css',
+  assets: ['game/assets/**'],
+  src: ['game/js/**'],
+  seeds: ['game/seeds/**'],
   build: ['build/**', 'dist/**'],
+  genCss: './dist/css',
+  genJs: './dist/js/client',
+  genLocales: './dist/locales',
+  js: ['game/**/*.js'],
+  locales: ['./game/locales/*.json'],
   modes: ['./build/*.js'],
-  localesSrc: ['./game/locales/*.json'],
-  localesDest: './dist/locales'
+  scss: ['game/**/*.scss'],
+  tests: ['tests/**/*.js']
 };
 
 var onError = function (error) {
@@ -34,27 +37,23 @@ var onError = function (error) {
     throw error;
 };
 
-gulp.task('delete-gen-css', function (cb) {
-    del(paths.css, cb);
+gulp.task('delete-dist', function (done) {
+    del(paths.build, done);
 });
-gulp.task('delete-gen-code', function (cb) {
-    del(paths.build, cb);
-});
-gulp.task('clean', ['delete-gen-css', 'delete-gen-code']);
+gulp.task('clean', ['delete-dist']);
 
 gulp.task('test', ['clean'], function () {
     gulp.src(paths.tests)
         .pipe(mocha({reporter: 'spec'}));
 });
 
-gulp.task('make-build', ['clean'], function (done) {
-  fs.mkdir('build', done);
-});
-gulp.task('make-dist', ['clean'], function (done) {
-  fs.mkdir('dist', done);
+gulp.task('make-folders', ['clean'], function () {
+  mkdirp('build/');
+  mkdirp('dist/');
+  mkdirp('dist/js/client/');
 });
 
-gulp.task('prep', ['make-dist', 'make-build']);
+gulp.task('prep', ['make-folders']);
 
 function generateEntrypointFile (mode, done) {
   var filename = ['build/', mode, '.js'].join('');
@@ -73,20 +72,20 @@ function generateEntrypointFile (mode, done) {
   });
 }
 
-gulp.task('copy-single-entry-point', ['prep'], function (cb) {
+gulp.task('copy-single-entry-point', ['prep'], function (done) {
     fs.exists('game/js/modes.json', function (exists) {
         if (exists) {
-            return cb();
+            return done();
         }
 
-        generateEntrypointFile('game', cb);
+        generateEntrypointFile('game', done);
     });
 });
 
-gulp.task('copy-multi-entry-points', ['prep'], function (cb) {
+gulp.task('copy-multi-entry-points', ['prep'], function (done) {
     fs.exists('game/js/modes.json', function (exists) {
         if (!exists) {
-            return cb();
+            return done();
         }
 
         var arr = require('./game/js/modes.json');
@@ -95,7 +94,7 @@ gulp.task('copy-multi-entry-points', ['prep'], function (cb) {
         function copied () {
             copyCount += 1;
             if (copyCount === arr.length) {
-                cb();
+                done();
             }
         }
 
@@ -114,9 +113,7 @@ gulp.task('build-code', ['prep', 'generate-entrypoints'], function() {
         return b.bundle();
     });
 
-    fs.mkdir('dist/js', function() {
-        fs.writeFileSync('dist/js/common.min.js', '');
-    });
+    fs.writeFileSync('dist/js/client/common.min.js', '');
 
     return gulp.src(paths.modes)
         .pipe(plumber({errorHandler: onError}))
@@ -124,7 +121,7 @@ gulp.task('build-code', ['prep', 'generate-entrypoints'], function() {
         .pipe(rename({suffix: '.min'}))
         .pipe(sourcemaps.init({loadMaps: true}))
         .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest(paths.genjs));
+        .pipe(gulp.dest(paths.genJs));
 });
 
 gulp.task('build-styles', ['prep'], function() {
@@ -134,16 +131,33 @@ gulp.task('build-styles', ['prep'], function() {
         .pipe(sass({ style: 'expanded', sourcemapPath: 'public/css', bundleExec: true }))
         .pipe(rename({suffix: '.min'}))
         .pipe(flatten())
-        .pipe(gulp.dest(paths.gencss));
+        .pipe(gulp.dest(paths.genCss));
 });
 
 gulp.task('merge-locales', ['prep'], function () {
-  return gulp.src(paths.localesSrc)
+  return gulp.src(paths.locales)
     .pipe(mergeJson(__dirname + '/node_modules/ensemblejs/locales/'))
-    .pipe(gulp.dest(paths.localesDest));
+    .pipe(gulp.dest(paths.genLocales));
 });
 
-gulp.task('build', ['build-styles', 'build-code', 'merge-locales']);
+gulp.task('copy-source', ['prep'], function () {
+  return gulp.src(paths.src)
+    .pipe(gulp.dest('dist/js'));
+});
+
+gulp.task('copy-seeds', ['prep'], function () {
+  return gulp.src(paths.seeds)
+    .pipe(gulp.dest('dist/seeds'));
+});
+
+gulp.task('copy-assets', ['prep'], function () {
+  return gulp.src(paths.assets)
+    .pipe(gulp.dest('dist/assets'));
+});
+
+gulp.task('copy-files', ['copy-source', 'copy-seeds', 'copy-assets']);
+
+gulp.task('build', ['build-styles', 'build-code', 'merge-locales', 'copy-files']);
 
 gulp.task('watch', function () {
   gulp.watch(paths.scss, ['build-styles']);

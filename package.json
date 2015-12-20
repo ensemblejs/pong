@@ -9,6 +9,7 @@
   "dependencies": {
     "distributedlife-sat": "file:///Users/distributedlife/projects/sat-js",
     "ensemblejs": "file:///Users/distributedlife/projects/ensemblejs",
+    "gulp": "^3.9.0",
     "pixi.js": "^3.0.7"
   },
   "devDependencies": {
@@ -28,6 +29,7 @@
     "gulp-sourcemaps": "^1.5.2",
     "jade": "^1.9.2",
     "jadeify": "^4.2.0",
+    "mkdirp": "^0.5.1",
     "vinyl-transform": "^1.0.0"
   },
   "scripts": {
