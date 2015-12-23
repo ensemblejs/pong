@@ -2,9 +2,10 @@
 
 var PIXI = require('pixi.js');
 var each = require('lodash').each;
+var once = require('lodash').once;
 
 module.exports = {
-  type: 'OnClientReady',
+  type: 'ViewStuff',
   deps: ['StateTracker', 'Config', 'DefinePlugin', '$'],
   func: function Pong (tracker, config, define, $) {
 
@@ -67,7 +68,7 @@ module.exports = {
 
     var stage;
     var renderer;
-    function setupPixiJs (dims) {
+    var setupPixiJs = once(function setupPixiJs (dims) {
       stage = new PIXI.Container();
       renderer = PIXI.autoDetectRenderer(dims.usableWidth, dims.usableHeight);
       $()('#' + config().client.element).append(renderer.view);
@@ -76,7 +77,7 @@ module.exports = {
       var offset = calculateOffset(config().pong.board, dims);
       stage.position.x = offset.x;
       stage.position.y = offset.y;
-    }
+    });
 
     define()('OnRenderFrame', function OnRenderFrame () {
       return function renderScene () {
@@ -161,74 +162,89 @@ module.exports = {
       };
     });
 
-    return function setup (dims) {
-      setupPixiJs(dims);
 
-      var ball = createBall();
-      var paddle1 = createPaddle();
-      var paddle2 = createPaddle();
+    // define()('TriggerMap', function () {
+    //   // setupPixiJs(dims);
 
-      stage.addChild(createBoard());
-      stage.addChild(ball);
-      stage.addChild(paddle1);
-      stage.addChild(paddle2);
+    //   var ball = createBall();
+    //   stage.addChild(ball);
 
-      var viewMap = {
-        'player.1.pong.paddle.position':[
-          { onChange: updatePaddle, data: paddle1 }
-        ],
-        'player.2.pong.paddle.position': [
-          { onChange: updatePaddle, data: paddle2 }
-        ],
-        'pong.ball.position': [
-          { onChange: updateBall, data: ball }
-        ],
-        'player.1.pong.score': [
-          { onChange: updateHud, data: 'player-1-score' }
-        ],
-        'player.2.pong.score': [
-          { onChange: updateHud, data: 'player-2-score' }
-        ],
-        'pong.round': [
-          { onChange: updateHud, data: 'pong-round' }
-        ],
-        'pong.status': [
-          { equals: 'not-started', call: notStarted},
-          { equals: 'countdown', call:countdown},
-          { equals: 'in-game', call: inGame},
-          { equals: 'game-over', call: gameOver}
-        ],
-        'player.1.pong.status': [
-          { equals: 'not-ready', call: p1NotReady },
-          { equals: 'ready', call: p1Ready }
-        ],
-        'player.2.pong.status': [
-          { equals: 'not-ready', call: p2NotReady },
-          { equals: 'ready', call: p2Ready }],
-        'ensemble.waitingForPlayers': [ {equals: false, call: removeWaiting }]
+    //   return {
+    //     'pong.ball.position': [{ onChangeOf: updateBall, data: ball }]
+    //   };
+    // });
+
+    // var viewMap = {
+    //   'player.1.pong.paddle.position':[
+    //     { onChange: updatePaddle, data: paddle1 }
+    //   ],
+    //   'player.2.pong.paddle.position': [
+    //     { onChange: updatePaddle, data: paddle2 }
+    //   ],
+    //   'pong.ball.position': [
+    //     { onChange: updateBall, data: ball }
+    //   ],
+    //   'player.1.pong.score': [
+    //     { onChange: updateHud, data: 'player-1-score' }
+    //   ],
+    //   'player.2.pong.score': [
+    //     { onChange: updateHud, data: 'player-2-score' }
+    //   ],
+    //   'pong.round': [
+    //     { onChange: updateHud, data: 'pong-round' }
+    //   ],
+    //   'pong.status': [
+    //     { equals: 'not-started', call: notStarted},
+    //     { equals: 'countdown', call:countdown},
+    //     { equals: 'in-game', call: inGame},
+    //     { equals: 'game-over', call: gameOver}
+    //   ],
+    //   'player.1.pong.status': [
+    //     { equals: 'not-ready', call: p1NotReady },
+    //     { equals: 'ready', call: p1Ready }
+    //   ],
+    //   'player.2.pong.status': [
+    //     { equals: 'not-ready', call: p2NotReady },
+    //     { equals: 'ready', call: p2Ready }],
+    //   'ensemble.waitingForPlayers': [ {equals: false, call: removeWaiting }]
+    // };
+
+    define()('OnClientReady', function () {
+      return function setup (dims) {
+        setupPixiJs(dims);
+
+        var ball = createBall();
+        var paddle1 = createPaddle();
+        var paddle2 = createPaddle();
+
+        stage.addChild(createBoard());
+        stage.addChild(ball);
+        stage.addChild(paddle1);
+        stage.addChild(paddle2);
+
+        tracker().onChangeOf('pong.ball.position', updateBall, ball);
+
+        tracker().onChangeOf('player.1.pong.paddle.position', updatePaddle, paddle1);
+        tracker().onChangeOf('player.1.pong.score', updateHud, 'player-1-score');
+
+        tracker().onChangeOf('player.2.pong.paddle.position', updatePaddle, paddle2);
+        tracker().onChangeOf('player.2.pong.score', updateHud, 'player-2-score');
+
+        tracker().onChangeOf('pong.round', updateHud, 'pong-round');
+
+        tracker().onChangeTo('pong.status', 'not-started', notStarted);
+        tracker().onChangeTo('pong.status', 'countdown', countdown);
+        tracker().onChangeTo('pong.status', 'in-game', inGame);
+        tracker().onChangeTo('pong.status', 'game-over', gameOver);
+
+        tracker().onChangeTo('player.1.pong.status', 'not-ready', p1NotReady);
+        tracker().onChangeTo('player.1.pong.status', 'ready', p1Ready);
+
+        tracker().onChangeTo('player.2.pong.status', 'not-ready', p2NotReady);
+        tracker().onChangeTo('player.2.pong.status', 'ready', p2Ready);
+
+        tracker().onChangeTo('ensemble.waitingForPlayers', false, removeWaiting);
       };
-
-      tracker().onChangeOf('player.1.pong.paddle.position', updatePaddle, paddle1);
-      tracker().onChangeOf('player.1.pong.score', updateHud, 'player-1-score');
-
-      tracker().onChangeOf('player.2.pong.paddle.position', updatePaddle, paddle2);
-      tracker().onChangeOf('player.2.pong.score', updateHud, 'player-2-score');
-
-      tracker().onChangeOf('pong.ball.position', updateBall, ball);
-      tracker().onChangeOf('pong.round', updateHud, 'pong-round');
-
-      tracker().onChangeTo('pong.status', 'not-started', notStarted);
-      tracker().onChangeTo('pong.status', 'countdown', countdown);
-      tracker().onChangeTo('pong.status', 'in-game', inGame);
-      tracker().onChangeTo('pong.status', 'game-over', gameOver);
-
-      tracker().onChangeTo('player.1.pong.status', 'not-ready', p1NotReady);
-      tracker().onChangeTo('player.1.pong.status', 'ready', p1Ready);
-
-      tracker().onChangeTo('player.2.pong.status', 'not-ready', p2NotReady);
-      tracker().onChangeTo('player.2.pong.status', 'ready', p2Ready);
-
-      tracker().onChangeTo('ensemble.waitingForPlayers', false, removeWaiting);
-    };
+    });
   }
 };

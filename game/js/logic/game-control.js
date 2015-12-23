@@ -1,20 +1,26 @@
 'use strict';
 
 var contains = require('lodash').contains;
-var each = require('lodash').each;
+var map = require('lodash').map;
 
 function toggleReady (state, ack, players) {
-  var player = {};
+  // var player = {};
 
-  each(players, function (playerNumber) {
-    player[playerNumber] = {
-      pong: {
-        status: contains(players, playerNumber) ? 'ready' : 'not-ready'
-      }
-    };
+  return map(players, function (playerNumber) {
+    var key = ['player', playerNumber, 'pong', 'status'].join('.');
+    var value = contains(players, playerNumber) ? 'ready' : 'not-ready';
+
+    console.log(key, value);
+
+    return [key, value];
+    // player[playerNumber] = {
+    //   pong: {
+    //     status: contains(players, playerNumber) ? 'ready' : 'not-ready'
+    //   }
+    // };
   });
 
-  return ['player', player];
+  // return ['player', player];
 }
 
 function start () {
