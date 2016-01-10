@@ -1,56 +1,18 @@
 {
-  "name": "ensemblejs-demo-pong",
+  "name": "ensemble-demo-pong",
   "version": "1.0.0",
   "description": "It's Pong!",
-  "engines": {
-    "node": "latest",
-    "npm": "latest"
-  },
   "dependencies": {
-    "distributedlife-sat": "file:///Users/distributedlife/projects/sat-js",
+    "distributedlife-sat": "^1.0.0",
     "ensemblejs": "file:///Users/distributedlife/projects/ensemblejs",
-    "gulp": "^3.9.0",
     "pixi.js": "^3.0.7"
   },
   "devDependencies": {
-    "browserify": "^8.1.1",
-    "browserify-shim": "^3.8.0",
-    "del": "^1.1.1",
-    "expect": "^1.1.0",
-    "fake-fs": "^0.5.0",
-    "gulp": "^3.8.11",
-    "gulp-autoprefixer": "^2.1.0",
-    "gulp-flatten": "^0.0.4",
-    "gulp-merge-json-sets": "^1.0.3",
-    "gulp-mocha": "^2.0.1",
-    "gulp-plumber": "^1.0.0",
-    "gulp-rename": "^1.2.2",
-    "gulp-sass": "^2.1.1",
-    "gulp-sourcemaps": "^1.5.2",
-    "jade": "^1.9.2",
-    "jadeify": "^4.2.0",
-    "mkdirp": "^0.5.1",
-    "vinyl-transform": "^1.0.0"
+    "gulp": "^3.9.0"
   },
   "scripts": {
-    "start": "gulp && node game.js | bunyan -o short",
+    "start": "gulp && gulp mongo:start && node game.js | bunyan -o short || true && gulp mongo:stop",
     "test": "gulp test"
-  },
-  "browserify": {
-    "transform": [
-      "browserify-shim",
-      [
-        "jadeify",
-        {
-          "compileDebug": false,
-          "pretty": false
-        }
-      ],
-      "require-globify"
-    ]
-  },
-  "browserify-shim": {
-    "window": "global:window"
   },
   "author": "Ryan Boucher",
   "license": "BSD"

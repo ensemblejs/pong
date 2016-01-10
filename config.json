@@ -1,6 +1,7 @@
 {
   "game": {
-    "title": "Pong"
+    "id": "distributedlife+pong",
+    "name": "Pong"
   },
   "debug": {
     "develop": true
@@ -14,8 +15,9 @@
     }
   },
   "ensemble": {
-    "minPlayers": 2,
-    "maxPlayers": 2
+    "minPlayers": 1,
+    "maxPlayers": 2,
+    "saveStyle": "manual"
   },
   "pong": {
     "ball": {

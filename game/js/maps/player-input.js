@@ -2,13 +2,13 @@
 
 module.exports = {
   type: 'ActionMap',
-  deps: ['Pong-PlayerMovement', 'SaveGame'],
-  func: function Pong (movement, saveGame) {
+  deps: ['Pong-PlayerMovement', 'SaveProgress'],
+  func: function Pong (movement, saveProgress) {
     return {
       up: [{call: movement().up}],
       down: [{call: movement().down}],
       space: [ {ack: 'player-ready', whenWaiting: true, onRelease: true} ],
-      f11: [ {call: saveGame().now} ]
+      f11: [ {call: saveProgress().now} ]
     };
   }
 };
