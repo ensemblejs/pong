@@ -140,13 +140,13 @@ module.exports = {
 
     define()('OnPlayerGroupChange', function OnPlayerGroupChange () {
       function online (player) {
-        $()('.player-' + player.id + '-status .connection').hide();
-        $()('.player-' + player.id + '-status .ready').show();
+        $()('.player-' + player.number + '-status .connection').hide();
+        $()('.player-' + player.number + '-status .ready').show();
       }
 
       function offline (player) {
-        $()('.player-' + player.id + '-status .connection').show();
-        $()('.player-' + player.id + '-status .ready').hide();
+        $()('.player-' + player.number + '-status .connection').show();
+        $()('.player-' + player.number + '-status .ready').hide();
       }
 
       var updateDisplay = {
@@ -175,19 +175,19 @@ module.exports = {
     // });
 
     // var viewMap = {
-    //   'player.1.pong.paddle.position':[
+    //   'player1.pong.paddle.position':[
     //     { onChange: updatePaddle, data: paddle1 }
     //   ],
-    //   'player.2.pong.paddle.position': [
+    //   'player2.pong.paddle.position': [
     //     { onChange: updatePaddle, data: paddle2 }
     //   ],
     //   'pong.ball.position': [
     //     { onChange: updateBall, data: ball }
     //   ],
-    //   'player.1.pong.score': [
+    //   'player1.pong.score': [
     //     { onChange: updateHud, data: 'player-1-score' }
     //   ],
-    //   'player.2.pong.score': [
+    //   'player2.pong.score': [
     //     { onChange: updateHud, data: 'player-2-score' }
     //   ],
     //   'pong.round': [
@@ -199,11 +199,11 @@ module.exports = {
     //     { equals: 'in-game', call: inGame},
     //     { equals: 'game-over', call: gameOver}
     //   ],
-    //   'player.1.pong.status': [
+    //   'player1.pong.status': [
     //     { equals: 'not-ready', call: p1NotReady },
     //     { equals: 'ready', call: p1Ready }
     //   ],
-    //   'player.2.pong.status': [
+    //   'player2.pong.status': [
     //     { equals: 'not-ready', call: p2NotReady },
     //     { equals: 'ready', call: p2Ready }],
     //   'ensemble.waitingForPlayers': [ {equals: false, call: removeWaiting }]
@@ -224,11 +224,11 @@ module.exports = {
 
         tracker().onChangeOf('pong.ball.position', updateBall, ball);
 
-        tracker().onChangeOf('player.1.pong.paddle.position', updatePaddle, paddle1);
-        tracker().onChangeOf('player.1.pong.score', updateHud, 'player-1-score');
+        tracker().onChangeOf('player1.pong.paddle.position', updatePaddle, paddle1);
+        tracker().onChangeOf('player1.pong.score', updateHud, 'player-1-score');
 
-        tracker().onChangeOf('player.2.pong.paddle.position', updatePaddle, paddle2);
-        tracker().onChangeOf('player.2.pong.score', updateHud, 'player-2-score');
+        tracker().onChangeOf('player2.pong.paddle.position', updatePaddle, paddle2);
+        tracker().onChangeOf('player2.pong.score', updateHud, 'player-2-score');
 
         tracker().onChangeOf('pong.round', updateHud, 'pong-round');
 
@@ -237,11 +237,11 @@ module.exports = {
         tracker().onChangeTo('pong.status', 'in-game', inGame);
         tracker().onChangeTo('pong.status', 'game-over', gameOver);
 
-        tracker().onChangeTo('player.1.pong.status', 'not-ready', p1NotReady);
-        tracker().onChangeTo('player.1.pong.status', 'ready', p1Ready);
+        tracker().onChangeTo('player1.pong.status', 'not-ready', p1NotReady);
+        tracker().onChangeTo('player1.pong.status', 'ready', p1Ready);
 
-        tracker().onChangeTo('player.2.pong.status', 'not-ready', p2NotReady);
-        tracker().onChangeTo('player.2.pong.status', 'ready', p2Ready);
+        tracker().onChangeTo('player2.pong.status', 'not-ready', p2NotReady);
+        tracker().onChangeTo('player2.pong.status', 'ready', p2Ready);
 
         tracker().onChangeTo('ensemble.waitingForPlayers', false, removeWaiting);
       };

@@ -7,9 +7,9 @@ module.exports = {
   type: 'OnPhysicsFrame',
   func: function BallMovement () {
     return function moveBall (state, delta) {
-      // if (state.get('pong.status') !== 'in-game') {
-      //   return;
-      // }
+      if (state.get('pong.status') !== 'in-game') {
+        return;
+      }
 
       var ball = state.unwrap('pong.ball');
 

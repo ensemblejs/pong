@@ -28,16 +28,16 @@ module.exports = {
     );
 
     function movePaddle (playerId, position, distance) {
-      return ['player.' + playerId + '.pong.paddle.position', {
+      return ['player' + playerId + '.pong.paddle.position', {
         x: position.x,
         y: movePaddleAlongRail(position.y, distance)
       }];
     }
 
     function up (state, data) {
-      // if (state.get('pong.status') !== 'in-game') {
-      //   return;
-      // }
+      if (state.get('pong.status') !== 'in-game') {
+        return;
+      }
 
       var playerId = data.playerId;
       var position = state.player(playerId).unwrap('pong.paddle.position');
@@ -46,9 +46,9 @@ module.exports = {
     }
 
     function down (state, data) {
-      // if (state.get('pong.status') !== 'in-game') {
-      //   return;
-      // }
+      if (state.get('pong.status') !== 'in-game') {
+        return;
+      }
 
       var playerId = data.playerId;
       var position = state.player(playerId).unwrap('pong.paddle.position');

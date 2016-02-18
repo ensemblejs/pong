@@ -4,14 +4,15 @@
   "description": "It's Pong!",
   "dependencies": {
     "distributedlife-sat": "^1.0.0",
-    "ensemblejs": "file:///Users/distributedlife/projects/ensemblejs",
+    "ensemblejs": "^6.0.0-develop",
+    "gamepad-api-mappings": "^4.0.0",
     "pixi.js": "^3.0.7"
   },
   "devDependencies": {
     "gulp": "^3.9.0"
   },
   "scripts": {
-    "start": "gulp && gulp mongo:start && node game.js | bunyan -o short || true && gulp mongo:stop",
+    "start": "gulp && gulp db:start && node game.js | bunyan -o short || true && gulp db:stop",
     "test": "gulp test"
   },
   "author": "Ryan Boucher",

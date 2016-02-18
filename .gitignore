@@ -9,3 +9,5 @@ game/css
 .DS_Store
 game/js/gen
 dist
+couchdb.stderr
+couchdb.stdout

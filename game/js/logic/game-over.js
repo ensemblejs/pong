@@ -12,8 +12,8 @@ module.exports = {
   type: 'TriggerMap',
   func: function GameOver () {
     return {
-      'player.1.pong.score': [ {eq: 9, call: p1Wins} ],
-      'player.2.pong.score': [ {eq: 9, call: p2Wins} ]
+      'player1.pong.score': [ {eq: 9, call: p1Wins} ],
+      'player2.pong.score': [ {eq: 9, call: p2Wins} ]
     };
   }
 };

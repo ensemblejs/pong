@@ -20,28 +20,26 @@ module.exports = {
         round: 1,
         status: 'not-started'
       },
-      player: {
-        1: {
-          pong: {
-            paddle: {
-              position: {x: 20, y: 255},
-              width: paddle.width,
-              height: paddle.height
-            },
-            score: 0,
-            status: 'not-ready'
-          }
+      player1: {
+        pong: {
+          paddle: {
+            position: {x: 20, y: 255},
+            width: paddle.width,
+            height: paddle.height
+          },
+          score: 0,
+          status: 'not-ready'
         },
-        2: {
-          pong: {
-            paddle: {
-              position: {x: 470, y: 255},
-              width: paddle.width,
-              height: paddle.height
-            },
-            score: 0,
-            status: 'not-ready'
-          }
+      },
+      player2: {
+        pong: {
+          paddle: {
+            position: {x: 470, y: 255},
+            width: paddle.width,
+            height: paddle.height
+          },
+          score: 0,
+          status: 'not-ready'
         }
       }
     };

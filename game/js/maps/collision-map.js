@@ -21,11 +21,11 @@ function resetBall (state, delta, config) {
 }
 
 function player1wins (state) {
-  return ['player.1.pong.score', state.get('player.1.pong.score') + 1];
+  return ['player1.pong.score', state.get('player1.pong.score') + 1];
 }
 
 function player2wins (state) {
-  return ['player.2.pong.score', state.get('player.2.pong.score') + 1];
+  return ['player2.pong.score', state.get('player2.pong.score') + 1];
 }
 
 module.exports = {

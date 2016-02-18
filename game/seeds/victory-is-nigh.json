@@ -1,18 +1,17 @@
 {
   "ensemble" : {
-    "mode" : "game",
-    "randomSeed" : "953a751b-0642-4510-8295-6df1909702ba"
+    "mode" : "default",
+    "randomSeed" : "953a751b-0642-4510-8295-6df1909702ba",
+    "secret": "bananaman"
   },
-  "player" : {
-    "1" : {
-      "pong" : {
-        "score" : 8
-      }
-    },
-    "2" : {
-      "pong" : {
-        "score" : 8
-      }
+  "player1" : {
+    "pong" : {
+      "score" : 8
+    }
+  },
+  "player2" : {
+    "pong" : {
+      "score" : 8
     }
   }
 }

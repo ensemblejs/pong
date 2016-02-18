@@ -6,7 +6,7 @@ module.exports = {
   func: function (config) {
     return {
       'ball': ['pong.ball'],
-      'paddles': ['player.1.pong.paddle', 'player.2.pong.paddle'],
+      'paddles': ['player1.pong.paddle', 'player2.pong.paddle'],
       'walls': [
         {
           position: { x: -100, y: -100},
