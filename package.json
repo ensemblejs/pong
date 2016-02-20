@@ -4,8 +4,9 @@
   "description": "It's Pong!",
   "dependencies": {
     "distributedlife-sat": "^1.0.0",
-    "ensemblejs": "^6.0.0-develop",
+    "ensemblejs": "^6.0.0-develop-2",
     "gamepad-api-mappings": "^4.0.0",
+    "jade": "^1.11.0",
     "pixi.js": "^3.0.7"
   },
   "devDependencies": {

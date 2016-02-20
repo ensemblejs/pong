@@ -1,12 +1,12 @@
 'use strict';
 
-var contains = require('lodash').contains;
+var includes = require('lodash').includes;
 var map = require('lodash').map;
 
 function toggleReady (state, ack, players) {
   var ret = map(players, function (playerNumber) {
     var key = ['player' + playerNumber, 'pong', 'status'].join('.');
-    var value = contains(players, playerNumber) ? 'ready' : 'not-ready';
+    var value = includes(players, playerNumber) ? 'ready' : 'not-ready';
 
     return [key, value];
   });
